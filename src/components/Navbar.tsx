@@ -1,4 +1,3 @@
-import { icon } from '../assets'
 import { Disclosure, Menu } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 
@@ -34,7 +33,7 @@ export default function Navbar() {
                 <div className="flex flex-shrink-0 items-center">
                   <img
                     className="h-9 w-auto"
-                    src={icon}
+                    src="https://bafybeihdyg4wdp2ekmb2nosm5bihmhkrioni5xy24g762zqhxw5qckkszm.ipfs.nftstorage.link/"
                     alt="dev"
                   />
                 </div>
