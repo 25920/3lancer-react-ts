@@ -1,23 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { ethers, providers } from 'ethers';
 import abi from "../contract/abi.json";
+import Bytecode from "../contract/byte.json";
 
 export default function FOF() {
   const [provider,setProvider] = useState<ethers.providers.Web3Provider | null>(null);;
+  const [contract, setContract] = useState<ethers.Contract|null>(null);
   const [deployer,setDeployer] = useState("");
   const [network, setNetwork] = useState("");
-
-  // useEffect(() => {
-  //   const provider = new ethers.providers.Web3Provider(window.ethereum);
-
-  //   const serviceContract = new ethers.Contract(
-  //       '0xE514dC32694196e9e01fCaa114D0cE48eAE73cb3',
-  //       abi,
-  //       provider
-  //   );
-
-  //   setContract(serviceContract);
-  // }, []);
 
   useEffect(() => {
     const initializeProvider = async () => {
@@ -34,6 +24,25 @@ export default function FOF() {
         setNetwork(network.name);
       }
     };
+
+    const deployContract = async () => {
+      if (provider) {
+        const signer = provider.getSigner();
+        const ContractFactory = new ethers.ContractFactory(abi, Bytecode, signer);
+        const deployedContract = await ContractFactory.deploy();
+        await deployedContract.deployed();
+        setContract(deployedContract);
+      }
+    };
+
+    const interactWithContract = async () => {
+      if (contract) {
+        const result = await contract.someFunction();
+        console.log(result);
+      }
+    };
+
+    deployContract();
 
     getNetwork();
 
