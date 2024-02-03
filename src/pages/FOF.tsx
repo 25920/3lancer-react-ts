@@ -1,12 +1,9 @@
 import { useState, useEffect } from 'react';
 import { ethers} from 'ethers';
-import abi from "../contract/ThreeLancer.json";
-import Bytecode from "../contract/byte.json";
+import contractCode from "../contract/ThreeLancer.json";
 
 export default function FOF() {
   const [provider,setProvider] = useState<ethers.providers.Web3Provider | null>(null);;
-  const [contract, setContract] = useState<ethers.Contract|null>(null);
-  const [deployer,setDeployer] = useState("");
   const [network, setNetwork] = useState("");
 
   useEffect(() => {
@@ -27,33 +24,10 @@ export default function FOF() {
       }
     };
 
-    const deployContract = async () => {
-      if (provider) {
-        const signer = provider.getSigner();
-        const ContractFactory = new ethers.ContractFactory(abi["abi"], abi["bytecode"], signer);
-        const deployedContract = await ContractFactory.deploy();
-        await deployedContract.deployed();
-        setContract(deployedContract);
-        // console.log(deployContract);
-      }
-    };
-
-    const interactWithContract = async () => {
-      if (contract) {
-        const result = await contract.deployer();
-        console.log(`${result} is the owner address`);
-        setDeployer(result);
-      }
-    };
-
     initializeProvider();
 
     getNetwork();
-
-    deployContract();
-
-    // interactWithContract();
-  }, [provider,contract]);
+  }, [provider]);
 
   return (
     <>
@@ -67,7 +41,7 @@ export default function FOF() {
               href="/"
               className="rounded-md bg-red-700 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Go back home by {deployer}
+              Go back home
             </a>
           </div>
         </div>
