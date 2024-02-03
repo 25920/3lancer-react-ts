@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { ethers, providers } from 'ethers';
-import abi from "../contract/abi.json";
+import { useState, useEffect } from 'react';
+import { ethers} from 'ethers';
+import abi from "../contract/ThreeLancer.json";
 import Bytecode from "../contract/byte.json";
 
 export default function FOF() {
@@ -15,6 +15,7 @@ export default function FOF() {
         await window.ethereum.request({ method: 'eth_requestAccounts' });
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         setProvider(provider);
+        // console.log(provider);
       }
     };
 
@@ -22,32 +23,37 @@ export default function FOF() {
       if (provider) {
         const network = await provider.getNetwork();
         setNetwork(network.name);
+        // console.log(network.name);
       }
     };
 
     const deployContract = async () => {
       if (provider) {
         const signer = provider.getSigner();
-        const ContractFactory = new ethers.ContractFactory(abi, Bytecode, signer);
+        const ContractFactory = new ethers.ContractFactory(abi["abi"], abi["bytecode"], signer);
         const deployedContract = await ContractFactory.deploy();
         await deployedContract.deployed();
         setContract(deployedContract);
+        // console.log(deployContract);
       }
     };
 
     const interactWithContract = async () => {
       if (contract) {
-        const result = await contract.someFunction();
-        console.log(result);
+        const result = await contract.deployer();
+        console.log(`${result} is the owner address`);
+        setDeployer(result);
       }
     };
 
-    deployContract();
+    initializeProvider();
 
     getNetwork();
 
-    initializeProvider();
-  }, [provider]);
+    deployContract();
+
+    // interactWithContract();
+  }, [provider,contract]);
 
   return (
     <>
@@ -61,7 +67,7 @@ export default function FOF() {
               href="/"
               className="rounded-md bg-red-700 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Go back home
+              Go back home by {deployer}
             </a>
           </div>
         </div>
