@@ -3,31 +3,42 @@ import { ethers} from 'ethers';
 import contractCode from "../contract/ThreeLancer.json";
 
 export default function FOF() {
-  const [provider,setProvider] = useState<ethers.providers.Web3Provider | null>(null);;
-  const [network, setNetwork] = useState("");
+  // const [provider,setProvider] = useState<ethers.providers.Web3Provider | null>(null);;
+  // const [network, setNetwork] = useState("");
+  const [contract, setContract] = useState<ethers.Contract|null>(null);
 
   useEffect(() => {
-    const initializeProvider = async () => {
-      if (window.ethereum) {
-        await window.ethereum.request({ method: 'eth_requestAccounts' });
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        setProvider(provider);
-        // console.log(provider);
-      }
-    };
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
 
-    const getNetwork = async () => {
-      if (provider) {
-        const network = await provider.getNetwork();
-        setNetwork(network.name);
-        // console.log(network.name);
-      }
-    };
+    // Connect to the deployed contract using its address and ABI
+    const auctionContract = new ethers.Contract(
+        '0x78f44dcf8F38792a8A5a61dbD9e32ccF011Eb510', // Replace with the deployed contract's address
+        contractCode["abi"],
+        provider
+    );
+    // const initializeProvider = async () => {
+    //   if (window.ethereum) {
+    //     await window.ethereum.request({ method: 'eth_requestAccounts' });
+    //     const provider = new ethers.providers.Web3Provider(window.ethereum);
+    //     setProvider(provider);
+    //     // console.log(provider);
+    //   }
+    // };
 
-    initializeProvider();
+    // const getNetwork = async () => {
+    //   if (provider) {
+    //     const network = await provider.getNetwork();
+    //     setNetwork(network.name);
+    //     // console.log(network.name);
+    //   }
+    // };
 
-    getNetwork();
-  }, [provider]);
+    // initializeProvider();
+
+    // getNetwork();
+  }, [
+    // provider
+  ]);
 
   return (
     <>
